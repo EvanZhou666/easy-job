@@ -37,7 +37,32 @@
 
     <groupId>com.qianlima.easyjob</groupId>
     <artifactId>easy-job-standalone</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.9-SNAPSHOT</version>
+
+    <name>easy-job-standalone</name>
+    <description>this is job scheduler project, make you manage job more easy</description>
+    <url>https://github.com/your/repo</url>
+
+    <licenses>
+        <license>
+            <name>MIT License 2.0</name>
+            <url>https://github.com/EvanZhou666/easy-job/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>EvanZhou666</name>
+            <email>EvanZhou666@163.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/EvanZhou666/easy-job</url>
+        <connection>scm:git:git://github.com:EvanZhou666/easy-job.git</connection>
+    </scm>
+
 
     <properties>
         <java.version>17</java.version>
@@ -65,12 +90,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
-<!--            <version>2.1.0</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -123,13 +142,89 @@
         </dependency>
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
+    <build>
+        <plugins>
+
+            <!-- 生成 sources.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase> <!-- 绑定到 verify 阶段 -->
+                        <goals>
+                            <goal>jar-no-fork</goal> <!-- 生成 sources.jar -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 生成 javadoc.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <failOnError>false</failOnError> <!-- 忽略错误（不推荐） -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>verify</phase> <!-- 绑定到 verify 阶段 -->
+                        <goals>
+                            <goal>jar</goal> <!-- 生成 javadoc.jar -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <useAgent>true</useAgent> <!-- 使用 GPG 代理 -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
