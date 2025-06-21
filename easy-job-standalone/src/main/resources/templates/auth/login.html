@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="/static/js/jquery-1.12.4.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#loginForm').on('submit', function(e) {
@@ -52,10 +52,11 @@
                         password: $('#password').val()
                     },
                     success: function(response) {
+                        console.log("r-----------response", response)
                         if (response.success) {
                             window.location.href = '/dashboard';
                         } else {
-                            $('#errorMessage').text(response.message).show();
+                            $('#errorMessage').text(response.data.error).show();
                         }
                     },
                     error: function() {

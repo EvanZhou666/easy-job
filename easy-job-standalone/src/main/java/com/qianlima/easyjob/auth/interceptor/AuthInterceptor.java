@@ -40,7 +40,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 不需要认证的路径
-/*        String path = request.getRequestURI();
+        String path = request.getRequestURI();
         if (isPublicPath(path)) {
             return true;
         }
@@ -55,7 +55,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             // 页面请求重定向到登录页
             response.sendRedirect("/login");
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -63,9 +63,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         return path.startsWith("/login") || 
                path.startsWith("/static") || 
                path.startsWith("/css") || 
-               path.startsWith("/js") || 
-               path.startsWith("/images") ||
-               path.equals("/");
+               path.startsWith("/static/js") ||
+               path.startsWith("/images");
     }
 
     private boolean isApiRequest(HttpServletRequest request) {
