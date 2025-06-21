@@ -60,6 +60,14 @@ public interface JobService {
     JobEntity getJobById(Long jobId);
 
     /**
+     * Get a job by name And GroupName
+     * @param jobName
+     * @param groupName
+     * @return
+     */
+    JobEntity getJobByName(String jobName, String groupName);
+
+    /**
      * tell quartz schedule start job
      * @param job
      * @throws ClassNotFoundException

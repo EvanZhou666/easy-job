@@ -1,13 +1,18 @@
 package com.qianlima.easyjob.job;
 
+import com.qianlima.easyjob.entity.JobEntity;
 import com.qianlima.easyjob.entity.JobLogEntity;
 import com.qianlima.easyjob.metrics.JobMetrics;
 import com.qianlima.easyjob.notification.NotificationService;
 import com.qianlima.easyjob.service.JobLogService;
+import com.qianlima.easyjob.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @Slf4j
 public abstract class BaseJob implements Job {
@@ -16,6 +21,9 @@ public abstract class BaseJob implements Job {
 
     @Autowired
     private JobMetrics jobMetrics;
+
+    @Autowired
+    private JobService jobService;
 
     @Autowired
     private NotificationService notificationService;
@@ -27,7 +35,10 @@ public abstract class BaseJob implements Job {
         jobLog.setJobName(context.getJobDetail().getKey().getName());
         jobLog.setJobGroup(context.getJobDetail().getKey().getGroup());
         jobLog.setJobClass(this.getClass().getName());
-        
+        JobEntity jobEntity = jobService.getJobByName(jobLog.getJobName(), jobLog.getJobGroup());
+        if (jobEntity != null) {
+            jobLog.setJob(jobEntity);
+        }
         var timerSample = jobMetrics.startTimer();
         try {
             log.info("Job {} started", context.getJobDetail().getKey());
@@ -38,7 +49,11 @@ public abstract class BaseJob implements Job {
         } catch (Exception e) {
             log.error("Job {} failed", context.getJobDetail().getKey(), e);
             jobLog.setStatus("FAILED");
-            jobLog.setExceptionInfo(e.getMessage());
+            jobLog.setMessage(e.getClass().getName());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            jobLog.setExceptionInfo(sw.toString());
             jobMetrics.recordJobFailure();
             notificationService.sendNotification(
                 "Job Execution Failed: " + context.getJobDetail().getKey(),

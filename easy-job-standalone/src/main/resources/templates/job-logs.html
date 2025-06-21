@@ -64,6 +64,7 @@
                                     <th>Status</th>
                                     <th>Duration</th>
                                     <th>Message</th>
+                                    <th>Error</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +76,7 @@
                                     </td>
                                     <td th:text="${log.executionTime/1000.0 + 's'}"></td>
                                     <td th:text="${log.message}"></td>
+                                    <td th:text="${log.exceptionInfo}"></td>
                                 </tr>
                             </tbody>
                         </table>

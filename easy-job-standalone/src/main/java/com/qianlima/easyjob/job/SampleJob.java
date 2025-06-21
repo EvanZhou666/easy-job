@@ -14,7 +14,6 @@ public class SampleJob extends BaseJob {
         if (params != null) {
             System.out.println("Job parameters: " + params);
         }
-        
         // 模拟任务执行
         Thread.sleep(1000);
     }

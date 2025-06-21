@@ -169,4 +169,12 @@ public class JobServiceImpl implements JobService {
     public JobEntity getJobById(Long jobId) {
         return entityManager.find(JobEntity.class, jobId);
     }
+
+    @Override
+    public JobEntity getJobByName(String jobName, String jobGroup) {
+        return entityManager.createQuery("SELECT j FROM JobEntity j WHERE j.jobName = :jobName AND j.jobGroup = :jobGroup",  JobEntity.class)
+                .setParameter("jobName", jobName)
+                .setParameter("jobGroup", jobGroup)
+                .getSingleResult();
+    }
 }
