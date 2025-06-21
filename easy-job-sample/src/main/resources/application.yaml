@@ -19,7 +19,7 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      show-sql: true
+      show-sql: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: none # 不自动创建表结构，create:自动创建表结构
@@ -27,7 +27,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true # 格式化SQL
-        show_sql: true
+        show_sql: false
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Shanghai
@@ -35,23 +35,4 @@ spring:
           provider_disables_autocommit: false
     generate-ddl: false
     defer-datasource-initialization: false
-    show-sql: true # 是否显示sql语句
-
-  quartz:
-    # 使用内存的方式存储任务
-    job-store-type: memory
-    scheduler-name: EasyScheduler
-    # 调度器自动启动，但可能被覆盖
-    auto-startup: true
-    # 取消延迟启动
-    startup-delay: 0s
-    wait-for-jobs-to-complete-on-shutdown: true
-    overwrite-existing-jobs: true
-    properties:
-      org.quartz.scheduler.instanceName: EasyScheduler
-      org.quartz.scheduler.instanceId: AUTO
-      org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
-      org.quartz.threadPool.threadCount: 10
-      org.quartz.scheduler.idleWaitTime: 3000  # 3秒（无触发器时的等待时间，内存模式下可调小降低延迟）
-      org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow: 0  # 提前触发时间窗口
-      org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 1  # 每次获取的最大触发器数量
+    show-sql: false # 是否显示sql语句
