@@ -76,12 +76,36 @@
                                     </td>
                                     <td th:text="${log.executionTime/1000.0 + 's'}"></td>
                                     <td th:text="${log.message}"></td>
-                                    <td th:text="${log.exceptionInfo}"></td>
+                                    <td>
+                                        <span th:if="${log.exceptionInfo != null and #strings.length(log.exceptionInfo) > 20}"
+                                              th:text="${#strings.substring(log.exceptionInfo,0,20) + '...'}"
+                                              th:title="${log.exceptionInfo}"
+                                              style="cursor: pointer;">
+                                        </span>
+                                        <span th:if="${log.exceptionInfo != null and #strings.length(log.exceptionInfo) <= 20}"
+                                              th:text="${log.exceptionInfo}">
+                                        </span>
+                                        <span th:if="${log.exceptionInfo == null}">-</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/jobs/{jobId}/logs(jobId=${job.id},page=${currentPage - 1},pageSize=${pageSize})}" tabindex="-1">上一页</a>
+                        </li>
+                        <li class="page-item">
+                            <span class="page-link" th:text="${currentPage }"></span>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/jobs/{jobId}/logs(jobId=${job.id},page=${currentPage + 1},pageSize=${pageSize})}">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -97,7 +121,7 @@
                         location.reload();
                     })
                     .catch(error => {
-                        alert('Failed to clear logs: ' + error.response.data);
+                        alert('Failed to clear logs: ' + error.response.data.error);
                     });
             }
         }

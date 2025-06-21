@@ -19,7 +19,21 @@ public interface JobLogService {
      * @param jobId Job ID
      * @return List of job logs
      */
-    List<JobLogEntity> getJobLogs(Long jobId);
+/**
+     * Get job logs by job ID with pagination
+     * @param jobId Job ID
+     * @param pageNum Page number (starting from 1)
+     * @param pageSize Page size
+     * @return List of job logs for the specified page
+     */
+    List<JobLogEntity> getJobLogs(Long jobId, int pageNum, int pageSize);
+
+    /**
+     * Get total count of job logs by job ID
+     * @param jobId Job ID
+     * @return Total count of job logs
+     */
+    long getJobLogsCount(Long jobId);
 
     /**
      * Clear logs of the specified job

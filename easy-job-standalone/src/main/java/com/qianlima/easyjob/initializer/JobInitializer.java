@@ -21,7 +21,9 @@ public class JobInitializer {
 
             for (JobEntity job : jobs) {
                 try {
-                    jobService.startJob(job);
+                    if (job.getStatus()) {
+                        jobService.startJob(job);
+                    }
                     log.info("Successfully initialized job: {}.{}", job.getJobGroup(), job.getJobName());
                 } catch (Exception e) {
                     log.error("Failed to initialize job: {}.{}", job.getJobGroup(), job.getJobName(), e);

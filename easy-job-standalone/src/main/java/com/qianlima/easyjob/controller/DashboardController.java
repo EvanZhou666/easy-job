@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +40,18 @@ public class DashboardController {
     }
 
     @GetMapping("/jobs/{jobId}/logs")
-    public String jobLogs(@PathVariable Long jobId, Model model) {
+    public String jobLogs(@PathVariable Long jobId, @RequestParam(defaultValue = "1") Integer page,
+                          @RequestParam(defaultValue = "10") int pageSize, Model model) {
         JobEntity job = jobService.getJobById(jobId);
-        List<JobLogEntity> logs = jobLogService.getJobLogs(jobId);
+        List<JobLogEntity> logs = jobLogService.getJobLogs(jobId, page, pageSize);
         
         LocalDateTime endTime = LocalDateTime.now();
         LocalDateTime startTime = endTime.minusDays(7); // 最近7天的统计
         Map<String, Object> statistics = statisticsService.getJobStatistics(jobId, startTime, endTime);
         
         model.addAttribute("job", job);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("logs", logs);
         model.addAttribute("statistics", statistics);
         return "job-logs";

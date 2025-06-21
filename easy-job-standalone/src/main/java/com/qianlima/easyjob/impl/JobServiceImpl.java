@@ -28,8 +28,13 @@ public class JobServiceImpl implements JobService {
         try {
             // 保存到数据库
             entityManager.persist(job);
-
-            startJob(job);
+            /* job状态是关闭，则置为停止状态*/
+            if (job.getStatus()) {
+                startJob(job);
+            }
+//            scheduler.pauseJob(JobKey.jobKey(job.getJobName(), job.getJobGroup()));
+//            job.setStatus(false);
+//            entityManager.merge(job);
         } catch (Exception e) {
             log.error("Add job failed", e);
             throw new RuntimeException("Add job failed", e);
@@ -52,13 +57,6 @@ public class JobServiceImpl implements JobService {
                 .build();
 
         scheduler.scheduleJob(jobDetail, trigger);
-
-        /* 启动不成功，置为停止状态*/
-        if (!job.getStatus()) {
-            scheduler.pauseJob(JobKey.jobKey(job.getJobName(), job.getJobGroup()));
-            job.setStatus(false);
-            entityManager.merge(job);
-        }
     }
 
     @Override
@@ -155,7 +153,7 @@ public class JobServiceImpl implements JobService {
             }
         } catch (Exception e) {
             log.error("Run job now failed", e);
-            throw new RuntimeException("Run job now failed", e);
+            throw new RuntimeException("Run job now failed, you must start job first", e);
         }
     }
 

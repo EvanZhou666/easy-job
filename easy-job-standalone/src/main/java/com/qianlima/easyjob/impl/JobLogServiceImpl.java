@@ -22,12 +22,26 @@ public class JobLogServiceImpl implements JobLogService {
     }
 
     @Override
-    public List<JobLogEntity> getJobLogs(Long jobId) {
+    public List<JobLogEntity> getJobLogs(Long jobId, int pageNum, int pageSize) {
         return entityManager.createQuery(
                 "SELECT l FROM JobLogEntity l WHERE l.job.id = :jobId ORDER BY l.startTime DESC",
                 JobLogEntity.class)
                 .setParameter("jobId", jobId)
+                .setFirstResult((pageNum - 1) * pageSize)
+                .setMaxResults(pageSize)
                 .getResultList();
+    }
+    @Override
+    public long getJobLogsCount(Long jobId) {
+        return entityManager.createQuery(
+                "SELECT COUNT(l) FROM JobLogEntity l WHERE l.job.id = :jobId",
+                Long.class)
+                .setParameter("jobId", jobId)
+                .getSingleResult();
+    }
+
+    public List<JobLogEntity> getJobLogs(Long jobId) {
+        return getJobLogs(jobId, 1, Integer.MAX_VALUE);
     }
 
     @Override

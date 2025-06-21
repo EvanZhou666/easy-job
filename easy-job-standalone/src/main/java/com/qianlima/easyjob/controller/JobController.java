@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * REST controller for job management
@@ -116,8 +118,20 @@ public class JobController {
      * @return List of job logs
      */
     @GetMapping("/{id}/logs")
-    public ResponseEntity<List<JobLogEntity>> getJobLogs(@PathVariable Long id) {
-        return ResponseEntity.ok(jobLogService.getJobLogs(id));
+    public ResponseEntity<Map<String, Object>> getJobLogs(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        List<JobLogEntity> logs = jobLogService.getJobLogs(id, pageNum, pageSize);
+        long total = jobLogService.getJobLogsCount(id);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("logs", logs);
+        response.put("total", total);
+        response.put("pageNum", pageNum);
+        response.put("pageSize", pageSize);
+
+        return ResponseEntity.ok(response);
     }
 
     /**
