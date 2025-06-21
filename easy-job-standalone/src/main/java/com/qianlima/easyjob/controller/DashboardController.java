@@ -1,0 +1,55 @@
+package com.qianlima.easyjob.controller;
+
+import com.qianlima.easyjob.entity.JobEntity;
+import com.qianlima.easyjob.entity.JobLogEntity;
+import com.qianlima.easyjob.service.JobLogService;
+import com.qianlima.easyjob.service.JobService;
+import com.qianlima.easyjob.statistics.JobStatisticsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+public class DashboardController {
+
+    private final JobService jobService;
+
+    private final JobLogService jobLogService;
+
+    private final JobStatisticsService statisticsService;
+
+    public DashboardController(JobService jobService, JobLogService jobLogService, JobStatisticsService statisticsService) {
+        this.jobService = jobService;
+        this.jobLogService = jobLogService;
+        this.statisticsService = statisticsService;
+
+    }
+
+
+    @GetMapping({"/", "/dashboard"})
+    public String dashboard(Model model) {
+        List<JobEntity> jobs = jobService.listJobs();
+        model.addAttribute("jobs", jobs);
+        return "dashboard";
+    }
+
+    @GetMapping("/jobs/{jobId}/logs")
+    public String jobLogs(@PathVariable Long jobId, Model model) {
+        JobEntity job = jobService.getJobById(jobId);
+        List<JobLogEntity> logs = jobLogService.getJobLogs(jobId);
+        
+        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime startTime = endTime.minusDays(7); // 最近7天的统计
+        Map<String, Object> statistics = statisticsService.getJobStatistics(jobId, startTime, endTime);
+        
+        model.addAttribute("job", job);
+        model.addAttribute("logs", logs);
+        model.addAttribute("statistics", statistics);
+        return "job-logs";
+    }
+
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Job Logs</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">Job Scheduler</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Job Logs - <span th:text="${job.jobName}"></span></h5>
+                        <button type="button" class="btn btn-danger" onclick="clearLogs()">Clear Logs</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Success Rate</h6>
+                                        <h2 class="card-text text-success" th:text="${#numbers.formatDecimal(statistics.successRate, 1, 2)} + '%'"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Executions</h6>
+                                        <h2 class="card-text" th:text="${statistics.totalExecutions}"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Avg Execution Time</h6>
+                                        <h2 class="card-text"  th:text="${statistics?.avgExecutionTime != null} ? ${#numbers.formatDecimal(statistics.avgExecutionTime/1000, 1, 2) + 's'} : 'N/A'">></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Failure Count</h6>
+                                        <h2 class="card-text text-danger" th:text="${statistics.failureCount}"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Duration</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="log : ${logs}">
+                                    <td th:text="${#temporals.format(log.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                    <td>
+                                        <span th:class="${log.status == 'SUCCESS' ? 'badge bg-success' : 'badge bg-danger'}"
+                                              th:text="${log.status}"></span>
+                                    </td>
+                                    <td th:text="${log.executionTime/1000.0 + 's'}"></td>
+                                    <td th:text="${log.message}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:inline="javascript">
+        function clearLogs() {
+            const jobId = /*[[${job.id}]]*/ null;
+            if (confirm('Are you sure you want to clear all logs for this job?')) {
+                axios.delete(`/api/jobs/${jobId}/logs`)
+                    .then(() => {
+                        location.reload();
+                    })
+                    .catch(error => {
+                        alert('Failed to clear logs: ' + error.response.data);
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
