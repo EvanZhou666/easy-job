@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: sample-app
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+      minimum-idle: 1
+      maximum-pool-size: 10
+      idle-timeout: 300000
+      connection-timeout: 20000
+      connection-test-query: SELECT 1
+      validation-timeout: 3000
+  jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      show-sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none # 不自动创建表结构，create:自动创建表结构
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true # 格式化SQL
+        show_sql: true
+        use_sql_comments: true
+        jdbc:
+          time_zone: Asia/Shanghai
+        connection:
+          provider_disables_autocommit: false
+    generate-ddl: false
+    defer-datasource-initialization: false
+    show-sql: true # 是否显示sql语句
+
+  quartz:
+    # 使用内存的方式存储任务
+    job-store-type: memory
+    scheduler-name: EasyScheduler
+    # 调度器自动启动，但可能被覆盖
+    auto-startup: true
+    # 取消延迟启动
+    startup-delay: 0s
+    wait-for-jobs-to-complete-on-shutdown: true
+    overwrite-existing-jobs: true
+    properties:
+      org.quartz.scheduler.instanceName: EasyScheduler
+      org.quartz.scheduler.instanceId: AUTO
+      org.quartz.threadPool.class: org.quartz.simpl.SimpleThreadPool
+      org.quartz.threadPool.threadCount: 10
+      org.quartz.scheduler.idleWaitTime: 3000  # 3秒（无触发器时的等待时间，内存模式下可调小降低延迟）
+      org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow: 0  # 提前触发时间窗口
+      org.quartz.scheduler.batchTriggerAcquisitionMaxCount: 1  # 每次获取的最大触发器数量

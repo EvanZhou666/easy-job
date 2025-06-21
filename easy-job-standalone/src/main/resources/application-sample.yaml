@@ -1,26 +1,26 @@
-# Server Configuration
-server:
-  port: 9000
+## Server Configuration
+#server:
+#  port: 9000
 
 # Spring Configuration
 spring:
-  application:
-    name: easy-scheduler  # Database Configuration
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
-    username: root
-    password: 123456
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari:
-      jdbc-url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
-      minimum-idle: 1
-      maximum-pool-size: 10
-      idle-timeout: 300000
-      connection-timeout: 20000
-      connection-test-query: SELECT 1
-      validation-timeout: 3000
-  #      data-source-class-name: com.zaxxer.hikari.HikariDataSource
+#  application:
+#    name: easy-scheduler  # Database Configuration
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+#    username: root
+#    password: 123456
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      jdbc-url: jdbc:mysql://localhost:3306/easyjob?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+#      minimum-idle: 1
+#      maximum-pool-size: 10
+#      idle-timeout: 300000
+#      connection-timeout: 20000
+#      connection-test-query: SELECT 1
+#      validation-timeout: 3000
+
   # JPA Configuration
   jpa:
     open-in-view: false
@@ -33,8 +33,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-        # 格式化SQL
-        format_sql: true
+        format_sql: true # 格式化SQL
         show_sql: true
         use_sql_comments: true
         jdbc:
@@ -43,8 +42,7 @@ spring:
           provider_disables_autocommit: false
     generate-ddl: false
     defer-datasource-initialization: false
-    #    显示sql语句
-    show-sql: true
+    show-sql: true # 是否显示sql语句
 
   # SQL Initialization
   sql:
