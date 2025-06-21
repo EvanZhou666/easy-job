@@ -33,9 +33,13 @@ public class DashboardController {
 
 
     @GetMapping({"/", "/dashboard"})
-    public String dashboard(Model model) {
-        List<JobEntity> jobs = jobService.listJobs();
+    public String dashboard( @RequestParam(defaultValue = "1") Integer page,
+                             @RequestParam(defaultValue = "20") int pageSize,
+                             Model model) {
+        List<JobEntity> jobs = jobService.pageJobs(page, pageSize);
         model.addAttribute("jobs", jobs);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", pageSize);
         return "dashboard";
     }
 

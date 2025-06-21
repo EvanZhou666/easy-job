@@ -66,6 +66,20 @@
                         </table>
                     </div>
                 </div>
+
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/dashboard(page=${currentPage - 1},pageSize=${pageSize})}" tabindex="-1">上一页</a>
+                        </li>
+                        <li class="page-item">
+                            <span class="page-link" th:text="${currentPage }"></span>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/dashboard(page=${currentPage + 1},pageSize=${pageSize})}">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -75,29 +89,29 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Job</h5>
+                    <h5 class="modal-title">添加新任务</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addJobForm">
                         <div class="mb-3">
-                            <label class="form-label">Job Name</label>
+                            <label class="form-label">Job 名称</label>
                             <input type="text" class="form-control" name="jobName" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Job Group</label>
+                            <label class="form-label">Job 分组</label>
                             <input type="text" class="form-control" name="jobGroup" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Job Class</label>
+                            <label class="form-label">Job 类名</label>
                             <input type="text" class="form-control" name="jobClass" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Cron Expression</label>
+                            <label class="form-label">Cron 表达式</label>
                             <input type="text" class="form-control" name="cronExpression" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">描述</label>
                             <textarea class="form-control" name="description"></textarea>
                         </div>
                     </form>

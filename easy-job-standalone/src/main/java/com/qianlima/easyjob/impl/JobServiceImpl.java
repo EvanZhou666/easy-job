@@ -164,6 +164,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<JobEntity> pageJobs(Integer page, Integer pageSize) {
+        return entityManager.createQuery("SELECT j FROM JobEntity j", JobEntity.class)
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    @Override
     public JobEntity getJobById(Long jobId) {
         return entityManager.find(JobEntity.class, jobId);
     }

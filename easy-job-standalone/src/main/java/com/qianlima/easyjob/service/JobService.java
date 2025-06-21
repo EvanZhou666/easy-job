@@ -51,7 +51,10 @@ public interface JobService {
      * @return List of all jobs
      */
     List<JobEntity> listJobs();
-    
+
+    List<JobEntity> pageJobs(Integer page, Integer size);
+
+
     /**
      * Get a job by ID
      * @param jobId Job ID
