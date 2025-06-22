@@ -53,7 +53,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.qianlima.easyjob</groupId>
+            <groupId>site.qianlima.easyjob</groupId>
             <artifactId>easy-job-standalone</artifactId>
             <version>0.0.9-SNAPSHOT</version>
         </dependency>

@@ -35,14 +35,23 @@ Easy-Job is a lightweight task scheduling platform built on Spring Boot and Quar
 
 2. Execute database initialization script `standalone-schema.sql`
 
-3. Start the application:
+3. Execute initial sql , please notice the password(shar256) is weak , you must change it.
+
+   ```
+   INSERT INTO job_user (`username`, `password`, `email`, `status`, `createdTime`, `updatedTime`)
+   VALUES
+       ('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'admin@example.com', 1, NOW(), NOW())
+   ON DUPLICATE KEY UPDATE `updatedTime` = NOW();
+   ```
+
+4. Start the application:
    ```bash
    mvn spring-boot:run
    ```
 
-4. Access the console: http://localhost:8080
-![](./docs/img.png)
-![](./docs/img2.png)
+5. Access the console: http://localhost:8080
+  ![](./docs/img.png)
+  ![](./docs/img2.png)
 
 ### Usage
 1. Create Task: Extend `BaseJob` class to implement custom tasks

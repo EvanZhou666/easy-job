@@ -22,6 +22,21 @@
  * SOFTWARE.
  */
 
+create table job_user
+(
+    status      int          not null,
+    createdTime datetime(6)  null,
+    id          bigint auto_increment
+        primary key,
+    updatedTime datetime(6)  null,
+    email       varchar(255) null,
+    password    varchar(255) not null,
+    username    varchar(255) not null,
+    constraint UK_sb8bbouer5wak8vyiiy4pf2bx
+        unique (username)
+);
+
+
 -- 创建job表
 CREATE TABLE IF NOT EXISTS `job_entity` (
     `id` bigint NOT NULL AUTO_INCREMENT,
