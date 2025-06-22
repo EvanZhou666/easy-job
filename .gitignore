@@ -29,3 +29,4 @@ target
 *.tmp.yml
 logs.db
 src/main/resources/application-prod.yaml
+/easy-job-standalone/site/

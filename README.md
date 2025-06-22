@@ -44,14 +44,60 @@ Easy-Job is a lightweight task scheduling platform built on Spring Boot and Quar
    ON DUPLICATE KEY UPDATE `updatedTime` = NOW();
    ```
 
-4. Start the application:
+4. import maven dependency in your pom.xml
+
+   ```xml
+   <!--or release-->
+   <dependency>
+   	<groupId>site.qianlima.easyjob</groupId>
+   	<artifactId>easy-job-standalone</artifactId>
+   	<version>0.0.9</version>
+   </dependency>
+   
+   <!--or snapshot-->
+   <dependency>
+   	<groupId>site.qianlima.easyjob</groupId>
+   	<artifactId>easy-job-standalone</artifactId>
+   	<version>0.0.9-SNAPSHOT</version>
+   </dependency>
+   ```
+
+   
+
+   **Using Snapshot Versions**
+
+   To test snapshot versions in your project, you need to explicitly declare the Sonatype Snapshots repository in your `pom.xml`:
+
+   ```xml
+   <repositories>
+     <repository>
+       <name>Central Portal Snapshots</name>
+       <id>central-portal-snapshots</id>
+       <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+       <releases>
+         <enabled>false</enabled>  <!-- Disable release versions from this repo -->
+       </releases>
+       <snapshots>
+         <enabled>true</enabled>   <!-- Enable snapshot versions -->
+         <updatePolicy>always</updatePolicy> <!-- Optional: always check for new snapshots -->
+       </snapshots>
+     </repository>
+   </repositories>
+   ```
+
+   
+
+   
+
+5. Start the application:
+
    ```bash
    mvn spring-boot:run
    ```
 
-5. Access the console: http://localhost:8080
-  ![](./docs/img.png)
-  ![](./docs/img2.png)
+6. Access the console: http://localhost:8080
+     ![](./docs/img.png)
+       ![](./docs/img2.png)
 
 ### Usage
 1. Create Task: Extend `BaseJob` class to implement custom tasks
@@ -88,8 +134,8 @@ Easy-Job 是一个基于 Spring Boot 和 Quartz 构建的轻量级任务调度�
 ## 快速开始
 
 ### 环境要求
-- JDK 8+
-- MySQL 5.7+
+- JDK 17+
+- MySQL 8+
 - Maven 3.6+
 
 ### 配置说明

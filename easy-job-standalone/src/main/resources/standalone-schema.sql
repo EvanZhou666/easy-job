@@ -22,36 +22,37 @@
  * SOFTWARE.
  */
 
+-- 创建用户表
 create table job_user
 (
+    id          bigint not null auto_increment
+        primary key,
+    username    varchar(255) not null,
+    password    varchar(255) not null,
     status      int          not null,
     createdTime datetime(6)  null,
-    id          bigint auto_increment
-        primary key,
     updatedTime datetime(6)  null,
-    email       varchar(255) null,
-    password    varchar(255) not null,
-    username    varchar(255) not null,
     constraint UK_sb8bbouer5wak8vyiiy4pf2bx
         unique (username)
 );
 
 
 -- 创建job表
-CREATE TABLE IF NOT EXISTS `job_entity` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
-    `job_name` varchar(255) NOT NULL COMMENT '任务名称',
-    `job_group` varchar(255) NOT NULL COMMENT '任务分组',
-    `cron_expression` varchar(255) NOT NULL COMMENT 'cron表达式',
-    `job_class_name` varchar(255) NOT NULL COMMENT '任务类名',
-    `job_data` text COMMENT '任务数据',
-    `description` varchar(255) DEFAULT NULL COMMENT '描述信息',
-    `status` varchar(20) NOT NULL DEFAULT 'NORMAL' COMMENT '任务状态',
-    `created_time` datetime(6) DEFAULT NULL COMMENT '创建时间',
-    `updated_time` datetime(6) DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_job_name_group` (`job_name`, `job_group`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+create table job_entity
+(
+    id             bigint  primary key auto_increment,
+    jobGroup       varchar(255) not null COMMENT '任务分组',
+    jobName        varchar(255) not null comment '任务名称',
+    jobClass       varchar(255) not null COMMENT '任务类名',
+    cronExpression varchar(255) not null COMMENT 'cron表达式',
+    params         varchar(255) null COMMENT '任务参数',
+    concurrent     bit          not null,
+    status         bit          not null,
+    description    varchar(255) null,
+    createTime     datetime(6)  null comment '创建时间',
+    updateTime     datetime(6)  null comment '更新时间',
+    UNIQUE KEY `UK_job_group_name` (`jobGroup`, `jobName`)
+);
 
 -- 创建job执行日志表
 create table job_log_entity
@@ -74,15 +75,3 @@ create table job_log_entity
 );
 
 
--- 创建用户表
-CREATE TABLE IF NOT EXISTS `user` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
-    `username` varchar(50) NOT NULL COMMENT '用户名',
-    `password` varchar(100) NOT NULL COMMENT '密码',
-    `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-    `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态：0-禁用，1-启用',
-    `created_time` datetime(6) DEFAULT NULL COMMENT '创建时间',
-    `updated_time` datetime(6) DEFAULT NULL COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `UK_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
