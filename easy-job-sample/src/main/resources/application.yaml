@@ -21,7 +21,7 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      show-sql: false
+      show-sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       ddl-auto: none # 不自动创建表结构，create:自动创建表结构
@@ -29,7 +29,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true # 格式化SQL
-        show_sql: false
+        show_sql: true
         use_sql_comments: true
         jdbc:
           time_zone: Asia/Shanghai
@@ -37,4 +37,4 @@ spring:
           provider_disables_autocommit: false
     generate-ddl: false
     defer-datasource-initialization: false
-    show-sql: false # 是否显示sql语句
+    show-sql: true # 是否显示sql语句

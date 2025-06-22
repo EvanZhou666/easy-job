@@ -92,24 +92,35 @@ public class JobServiceImpl implements JobService {
                 throw new RuntimeException("Job not found");
             }
 
+            // 先停止原先的任务
+            pauseJob(job.getId());
+
+
             // 更新数据库
+            existingJob.setJobName(job.getJobName());
             existingJob.setCronExpression(job.getCronExpression());
             existingJob.setDescription(job.getDescription());
             existingJob.setStatus(job.getStatus());
             existingJob.setParams(job.getParams());
+            existingJob.setJobClass(job.getJobClass());
+            entityManager.merge(existingJob);
             
             // 更新调度器
             TriggerKey triggerKey = TriggerKey.triggerKey(job.getJobName() + "_trigger", job.getJobGroup());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-            
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
-            trigger = trigger.getTriggerBuilder()
-                    .withIdentity(triggerKey)
-                    .withSchedule(cronScheduleBuilder)
-                    .build();
-            
-            scheduler.rescheduleJob(triggerKey, trigger);
-            
+
+            if (trigger == null) {
+                startJob(existingJob);
+            } else {
+                CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(job.getCronExpression());
+                trigger = trigger.getTriggerBuilder()
+                        .withIdentity(triggerKey)
+                        .withSchedule(cronScheduleBuilder)
+                        .build();
+
+                scheduler.rescheduleJob(triggerKey, trigger);
+            }
+
             if (!job.getStatus()) {
                 scheduler.pauseJob(JobKey.jobKey(job.getJobName(), job.getJobGroup()));
             } else {

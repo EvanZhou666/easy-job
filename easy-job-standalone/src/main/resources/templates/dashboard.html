@@ -59,6 +59,11 @@
                                                     th:onclick="'showLogs(' + ${job.id} + ')'">日志</button>
                                             <button type="button" class="btn btn-sm btn-danger"
                                                     th:onclick="'deleteJob(' + ${job.id} + ')'">删除</button>
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    th:attr="data-jobId=${job.id}"
+                                                    onclick="getJobDetails(this)">
+                                                编辑
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -124,6 +129,48 @@
         </div>
     </div>
 
+    <!-- Update Job Modal -->
+    <div class="modal fade" id="updateJobModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑任务</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateJobForm">
+                        <!-- 隐藏job id -->
+                        <input type="hidden" name="jobId">
+                        <div class="mb-3">
+                            <label class="form-label">Job 名称</label>
+                            <input type="text" class="form-control" name="jobName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Job 分组</label>
+                            <input type="text" class="form-control" name="jobGroup" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Job 类名</label>
+                            <input type="text" class="form-control" name="jobClass" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cron 表达式</label>
+                            <input type="text" class="form-control" name="cronExpression" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">描述</label>
+                            <textarea class="form-control" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="updateJob()">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script th:inline="javascript">
@@ -183,6 +230,45 @@
             }
         }
 
+        // 通过 job id 调用接口获取job详情，并填充编辑模态框
+        function getJobDetails(btn) {
+            const jobId = btn.getAttribute('data-jobId');
+            axios.get(`/api/jobs/${jobId}`)
+                .then(response => {
+                    // 假设返回数据格式为 { id, jobName, jobGroup, jobClass, cronExpression, description }
+                    const job = response.data;
+                    // 获取编辑表单
+                    const form = document.getElementById('updateJobForm');
+                    form.elements['jobId'].value = job.id;
+                    form.elements['jobName'].value = job.jobName;
+                    form.elements['jobGroup'].value = job.jobGroup;
+                    form.elements['jobClass'].value = job.jobClass;
+                    form.elements['cronExpression'].value = job.cronExpression;
+                    form.elements['description'].value = job.description || '';
+                    // 显示编辑模态框
+                    const updateModal = new bootstrap.Modal(document.getElementById('updateJobModal'));
+                    updateModal.show();
+                })
+                .catch(error => {
+                    alert('获取任务详情失败，' + (error.response.data.error || error));
+                });
+        }
+
+        function updateJob() {
+            const form = document.getElementById('updateJobForm');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            const jobId = data.jobId;
+
+            axios.put(`/api/jobs/${jobId}`, data)
+                .then(() => {
+                    // 更新成功后可选择刷新页面或局部刷新数据
+                    location.reload();
+                })
+                .catch(error => {
+                    alert('更新任务失败，' + (error.response.data.error || error));
+                });
+        }
         function showLogs(jobId) {
             window.location.href = `/jobs/${jobId}/logs`;
         }
