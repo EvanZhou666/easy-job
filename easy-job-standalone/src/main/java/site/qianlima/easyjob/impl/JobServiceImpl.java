@@ -71,6 +71,7 @@ public class JobServiceImpl implements JobService {
         JobDetail jobDetail = JobBuilder.newJob(jobClass)
                 .withIdentity(job.getJobName(), job.getJobGroup())
                 .withDescription(job.getDescription())
+                .usingJobData("params",  job.getParams())
                 .build();
 
         // 创建Trigger
