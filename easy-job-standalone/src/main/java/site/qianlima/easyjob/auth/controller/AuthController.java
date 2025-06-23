@@ -46,7 +46,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage(HttpServletRequest request) {
-        return "/auth/login";
+        return "auth/login";
     }
 
     @PostMapping("/login")
