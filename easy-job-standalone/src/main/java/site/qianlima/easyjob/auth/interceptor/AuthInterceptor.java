@@ -27,44 +27,42 @@ package site.qianlima.easyjob.auth.interceptor;
 import site.qianlima.easyjob.auth.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
+
+    public AuthInterceptor(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        // 不需要认证的路径
         String path = request.getRequestURI();
-        if (isPublicPath(path)) {
+        if (isPublicPath(request.getContextPath(), path)) {
             return true;
         }
 
-        // 检查是否已认证
         if (!sessionManager.isAuthenticated()) {
-            // API请求返回401
             if (isApiRequest(request)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
             }
-            // 页面请求重定向到登录页
-            response.sendRedirect("/login");
+            response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
         return true;
     }
 
-    private boolean isPublicPath(String path) {
-        return path.startsWith("/login") || 
-               path.startsWith("/static") || 
-               path.startsWith("/css") || 
-               path.startsWith("/static/js") ||
-               path.startsWith("/images");
+    private boolean isPublicPath(String contextPath, String path) {
+        return path.startsWith(contextPath + "/login") ||
+               path.startsWith(contextPath + "/static") ||
+               path.startsWith(contextPath + "/css") ||
+               path.startsWith(contextPath + "/static/js") ||
+               path.startsWith(contextPath + "/images");
     }
 
     private boolean isApiRequest(HttpServletRequest request) {

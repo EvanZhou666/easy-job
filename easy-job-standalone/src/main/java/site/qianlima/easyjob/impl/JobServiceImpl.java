@@ -189,7 +189,7 @@ public class JobServiceImpl implements JobService {
             }
         } catch (Exception e) {
             log.error("Run job now failed", e);
-            throw new RuntimeException("Run job now failed, you must start job first", e);
+            throw new RuntimeException("Run job now failed, you resume start job first", e);
         }
     }
 

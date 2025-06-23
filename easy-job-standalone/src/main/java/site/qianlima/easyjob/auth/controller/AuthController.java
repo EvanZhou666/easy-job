@@ -24,6 +24,7 @@
 
 package site.qianlima.easyjob.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import site.qianlima.easyjob.auth.repository.UserRepository;
 import site.qianlima.easyjob.auth.session.SessionManager;
 import site.qianlima.easyjob.auth.utils.PasswordUtils;
@@ -44,8 +45,8 @@ public class AuthController {
     private SessionManager sessionManager;
 
     @GetMapping("/login")
-    public String loginPage() {
-        return "auth/login";
+    public String loginPage(HttpServletRequest request) {
+        return "/auth/login";
     }
 
     @PostMapping("/login")
@@ -55,25 +56,25 @@ public class AuthController {
         userRepository.findByUsername(username).ifPresentOrElse(user -> {
             if (user.getStatus() == 0) {
                 result.put("success", false);
-                result.put("message", "账号已被禁用");
+                result.put("message", "The account has been disabled.");
             } else if (PasswordUtils.verifyPassword(password, user.getPassword())) {
                 sessionManager.setCurrentUser(username);
                 result.put("success", true);
-                result.put("message", "登录成功");
+                result.put("message", "You have successfully logged in.");
             } else {
                 result.put("success", false);
-                result.put("message", "用户名或密码错误");
+                result.put("message", "Incorrect username or password.");
             }
         }, () -> {
             result.put("success", false);
-            result.put("message", "用户名或密码错误");
+            result.put("message", "Incorrect username or password.");
         });
         return result;
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public String logout(HttpServletRequest request) {
         sessionManager.logout();
-        return "redirect:/login";
+        return "redirect:" +  request.getContextPath() + "/login";
     }
 }
