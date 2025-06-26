@@ -24,13 +24,11 @@
 
 package site.qianlima.easyjob.notification;
 
-import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-@Service
 public class EmailNotificationService implements NotificationService {
     
     @Autowired(required = false)
@@ -50,7 +48,7 @@ public class EmailNotificationService implements NotificationService {
             message.setTo(toEmail);
             message.setSubject(title);
             message.setText(content);
-//            mailSender.send(message);
+            mailSender.send(message);
         }
     }
 }

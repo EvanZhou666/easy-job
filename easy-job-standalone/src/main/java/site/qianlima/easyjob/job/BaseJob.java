@@ -49,7 +49,7 @@ public abstract class BaseJob implements Job {
     @Autowired
     private JobService jobService;
 
-    @Autowired
+    @Autowired(required = false)
     private NotificationService notificationService;
 
     @Override
@@ -79,9 +79,11 @@ public abstract class BaseJob implements Job {
             e.printStackTrace(pw);
             jobLog.setExceptionInfo(sw.toString());
             jobMetrics.recordJobFailure();
-            notificationService.sendNotification(
-                "Job Execution Failed: " + context.getJobDetail().getKey(),
-                "Job failed with error: " + e.getMessage());
+            if (notificationService != null) {
+                notificationService.sendNotification(
+                        "Job Execution Failed: " + context.getJobDetail().getKey(),
+                        "Job failed with error: " + jobLog.getExceptionInfo());
+            }
         } finally {
             jobLog.setExecutionTime(System.currentTimeMillis() - startTime);
             jobLogService.save(jobLog);
