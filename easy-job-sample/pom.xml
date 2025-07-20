@@ -37,7 +37,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>easy-job-sample</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>site.qianlima.easyjob</groupId>
             <artifactId>easy-job-standalone</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>

@@ -29,20 +29,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import site.qianlima.easyjob.config.EasyJobProps;
+
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
     private final SessionManager sessionManager;
+    private final EasyJobProps easyJobProps;
 
-    public AuthInterceptor(SessionManager sessionManager) {
+
+
+    public AuthInterceptor(SessionManager sessionManager, EasyJobProps easyJobProps) {
         this.sessionManager = sessionManager;
+        this.easyJobProps = easyJobProps;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
-        if (isPublicPath(request.getContextPath(), path)) {
+        if (isPublicPath(request.getContextPath(), path) || isWhitePath(request.getContextPath(), path)) {
             return true;
         }
 
@@ -63,6 +69,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                path.startsWith(contextPath + "/css") ||
                path.startsWith(contextPath + "/static/js") ||
                path.startsWith(contextPath + "/images");
+    }
+
+    private boolean isWhitePath(String contextPath, String path) {
+        if (easyJobProps.getWhiteList() != null && !easyJobProps.getWhiteList().isEmpty()) {
+            return easyJobProps.getWhiteList().contains(path.replaceFirst(contextPath, ""));
+        }
+        return false;
     }
 
     private boolean isApiRequest(HttpServletRequest request) {

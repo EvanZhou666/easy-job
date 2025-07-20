@@ -54,7 +54,7 @@ public class EasyJobAutoConfiguration {
         properties.setJobStoreType(JobStoreType.MEMORY);
         properties.setSchedulerName(SCHEDULER_NAME);
         properties.setAutoStartup(true);
-        properties.setStartupDelay(Duration.ofSeconds(3));
+        properties.setStartupDelay(Duration.ofSeconds(15));
         properties.setWaitForJobsToCompleteOnShutdown(true);
         properties.setOverwriteExistingJobs(true);
         Map<String, String> map = properties.getProperties();
