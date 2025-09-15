@@ -24,6 +24,9 @@
 
 package site.qianlima.easyjob.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import site.qianlima.easyjob.config.EasyJobProps;
 import site.qianlima.easyjob.entity.JobLogEntity;
 import site.qianlima.easyjob.service.JobLogService;
 import jakarta.persistence.EntityManager;
@@ -31,6 +34,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -38,6 +42,9 @@ public class JobLogServiceImpl implements JobLogService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private EasyJobProps easyJobProps;
 
     @Override
     @Transactional
@@ -80,4 +87,19 @@ public class JobLogServiceImpl implements JobLogService {
     public JobLogEntity getLogById(Long logId) {
         return entityManager.find(JobLogEntity.class, logId);
     }
+
+    @Scheduled(cron = "0 10 * * * ?")
+    @Transactional
+    public void sheduleCleanLogs() {
+        LocalDateTime cutoffTime = null;
+        if (easyJobProps.getJobLogPersistSeconds() == null) {
+            cutoffTime =  LocalDateTime.now().minusSeconds(24 * 60 * 60);
+        } else {
+            cutoffTime =  LocalDateTime.now().minusSeconds(easyJobProps.getJobLogPersistSeconds());
+        }
+        entityManager.createQuery("DELETE FROM JobLogEntity l WHERE l.startTime < :cutoffTime")
+                .setParameter("cutoffTime", cutoffTime)
+                .executeUpdate();
+    }
+
 }

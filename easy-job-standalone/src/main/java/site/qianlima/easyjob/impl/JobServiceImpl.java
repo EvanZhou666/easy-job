@@ -170,7 +170,15 @@ public class JobServiceImpl implements JobService {
         try {
             JobEntity job = entityManager.find(JobEntity.class, jobId);
             if (job != null) {
-                scheduler.resumeJob(JobKey.jobKey(job.getJobName(), job.getJobGroup()));
+                // 更新调度器
+                TriggerKey triggerKey = TriggerKey.triggerKey(job.getJobName() + "_trigger", job.getJobGroup());
+                CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+
+                if (trigger == null) {
+                    startJob(job);
+                } else {
+                    scheduler.resumeJob(JobKey.jobKey(job.getJobName(), job.getJobGroup()));
+                }
                 job.setStatus(true);
                 entityManager.merge(job);
             }

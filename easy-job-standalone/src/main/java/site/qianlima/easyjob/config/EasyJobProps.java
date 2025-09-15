@@ -35,6 +35,8 @@ public class EasyJobProps {
 
     private List<String> whiteList;
 
+    private Integer jobLogPersistSeconds;
+
     public List<String> getWhiteList() {
         return whiteList;
     }
@@ -42,4 +44,13 @@ public class EasyJobProps {
     public void setWhiteList(List<String> whiteList) {
         this.whiteList = whiteList;
     }
+
+    public Integer getJobLogPersistSeconds() {
+        return jobLogPersistSeconds;
+    }
+
+    public void setJobLogPersistSeconds(Integer jobLogPersistSeconds) {
+        this.jobLogPersistSeconds = jobLogPersistSeconds;
+    }
+
 }
