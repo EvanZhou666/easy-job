@@ -55,7 +55,7 @@
         <dependency>
             <groupId>site.qianlima.easyjob</groupId>
             <artifactId>easy-job-standalone</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
 
     </dependencies>

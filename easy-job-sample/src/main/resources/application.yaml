@@ -38,3 +38,6 @@ spring:
     generate-ddl: false
     defer-datasource-initialization: false
     show-sql: true # 是否显示sql语句
+server:
+  servlet:
+    context-path: /task

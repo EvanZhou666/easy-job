@@ -37,7 +37,7 @@
 
     <groupId>site.qianlima.easyjob</groupId>
     <artifactId>easy-job-standalone</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>easy-job-standalone</name>
     <description>this is job scheduler project, make you manage job more easy</description>
