@@ -101,4 +101,10 @@ public interface JobService {
      * @throws SchedulerException
      */
     void startJob(JobEntity job) throws ClassNotFoundException, SchedulerException;
+
+    /**
+     * Interrupt a currently running job by jobId. Uses ThreadRegistry to find and interrupt the thread.
+     * @param jobId Job ID
+     */
+    void interruptJob(Long jobId);
 }

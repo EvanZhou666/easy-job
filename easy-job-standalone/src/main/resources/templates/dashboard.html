@@ -58,6 +58,8 @@
                                                     th:onclick="'resumeJob(' + ${job.id} + ')'">恢复</button>
                                             <button type="button" class="btn btn-sm btn-info"
                                                     th:onclick="'showLogs(' + ${job.id} + ')'">日志</button>
+                                                <button type="button" class="btn btn-sm btn-dark"
+                                                    th:onclick="'interruptJob(' + ${job.id} + ')'">中断</button>
                                             <button type="button" class="btn btn-sm btn-danger"
                                                     th:onclick="'deleteJob(' + ${job.id} + ')'">删除</button>
                                             <button type="button" class="btn btn-sm btn-secondary"
@@ -200,6 +202,17 @@
                 })
                 .catch(error => {
                     alert(error.response.data.error);
+                });
+        }
+
+        function interruptJob(jobId) {
+            if (!confirm('确认中断正在运行的任务吗？')) return;
+            axios.post(`${window.APP_CONTEXT_PATH}/api/jobs/${jobId}/interrupt`)
+                .then(() => {
+                    alert('Interrupt signal sent');
+                })
+                .catch(error => {
+                    alert('Failed to interrupt job,' + (error.response.data?.error || error));
                 });
         }
 

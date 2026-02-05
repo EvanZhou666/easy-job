@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import site.qianlima.easyjob.utils.ThreadRegistry;
 
 @Slf4j
 public abstract class BaseJob implements Job {
@@ -54,6 +55,8 @@ public abstract class BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
+        String registryKey = context.getJobDetail().getKey().getName() + ":" + context.getJobDetail().getKey().getGroup();
+        ThreadRegistry.register(registryKey, Thread.currentThread());
         long startTime = System.currentTimeMillis();
         JobLogEntity jobLog = new JobLogEntity();
         jobLog.setJobName(context.getJobDetail().getKey().getName());
@@ -85,6 +88,7 @@ public abstract class BaseJob implements Job {
                         "Job failed with error: " + jobLog.getExceptionInfo());
             }
         } finally {
+            ThreadRegistry.unregister(registryKey, Thread.currentThread());
             jobLog.setExecutionTime(System.currentTimeMillis() - startTime);
             jobLogService.save(jobLog);
             jobMetrics.stopTimer(timerSample);

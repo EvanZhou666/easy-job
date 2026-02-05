@@ -178,4 +178,15 @@ public class JobController {
     public ResponseEntity<JobLogEntity> getJobLog(@PathVariable Long logId) {
         return ResponseEntity.ok(jobLogService.getLogById(logId));
     }
+
+    /**
+     * Interrupt a running job
+     * @param id Job ID
+     * @return Response entity
+     */
+    @PostMapping("/{id}/interrupt")
+    public ResponseEntity<Void> interruptJob(@PathVariable Long id) {
+        jobService.interruptJob(id);
+        return ResponseEntity.ok().build();
+    }
 }

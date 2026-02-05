@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import site.qianlima.easyjob.utils.ThreadRegistry;
 
 @Slf4j
 @Service
@@ -226,5 +227,23 @@ public class JobServiceImpl implements JobService {
                 .setParameter("jobName", jobName)
                 .setParameter("jobGroup", jobGroup)
                 .getSingleResult();
+    }
+
+    @Override
+    public void interruptJob(Long jobId) {
+        try {
+            JobEntity job = entityManager.find(JobEntity.class, jobId);
+            if (job == null) {
+                throw new RuntimeException("Job not found");
+            }
+            String key = job.getJobName() + ":" + job.getJobGroup();
+            boolean ok = ThreadRegistry.interrupt(key);
+            if (!ok) {
+                throw new RuntimeException("No running thread found for job");
+            }
+        } catch (Exception e) {
+            log.error("Interrupt job failed", e);
+            throw new RuntimeException("Interrupt job failed", e);
+        }
     }
 }
