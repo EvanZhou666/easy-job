@@ -145,6 +145,10 @@
                             <input type="text" class="form-control" name="cronExpression" required>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">任务参数(params)</label>
+                            <input type="text" class="form-control" name="params" placeholder="可选，任务执行参数">
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">描述</label>
                             <textarea class="form-control" name="description"></textarea>
                         </div>
@@ -185,6 +189,10 @@
                         <div class="mb-3">
                             <label class="form-label">Cron 表达式</label>
                             <input type="text" class="form-control" name="cronExpression" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">任务参数(params)</label>
+                            <input type="text" class="form-control" name="params" placeholder="可选，任务执行参数">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">描述</label>
@@ -301,6 +309,7 @@
                     form.elements['jobName'].value = job.jobName;
                     form.elements['jobGroup'].value = job.jobGroup;
                     form.elements['jobClass'].value = job.jobClass;
+                    form.elements['params'].value = job.params;
                     form.elements['cronExpression'].value = job.cronExpression;
                     form.elements['description'].value = job.description || '';
                     // 显示编辑模态框
