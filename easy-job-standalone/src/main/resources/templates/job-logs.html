@@ -119,6 +119,20 @@
         var context = window.APP_CONTEXT_PATH
         const lastSlashIndex = context.lastIndexOf("/");
         window.APP_CONTEXT_PATH = context.substring(0, lastSlashIndex);
+
+        // axios全局拦截器，处理401跳转到登录页
+        if (window.axios) {
+            axios.interceptors.response.use(
+                function(response) { return response; },
+                function(error) {
+                    if (error.response && error.response.status === 401) {
+                        window.location.href = window.APP_CONTEXT_PATH + '/login';
+                        return;
+                    }
+                    return Promise.reject(error);
+                }
+            );
+        }
         function clearLogs() {
             const jobId = /*[[${job.id}]]*/ null;
             if (confirm('Are you sure you want to clear all logs for this job?')) {
