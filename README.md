@@ -51,14 +51,14 @@ Easy-Job is a lightweight task scheduling platform built on Spring Boot and Quar
    <dependency>
    	<groupId>site.qianlima.easyjob</groupId>
    	<artifactId>easy-job-standalone</artifactId>
-   	<version>0.0.9</version>
+   	<version>1.0.2</version>
    </dependency>
    
    <!--or snapshot-->
    <dependency>
    	<groupId>site.qianlima.easyjob</groupId>
    	<artifactId>easy-job-standalone</artifactId>
-   	<version>0.0.9-SNAPSHOT</version>
+   	<version>1.0.1-SNAPSHOT</version>
    </dependency>
    ```
 
@@ -155,7 +155,7 @@ Easy-Job 是一个基于 Spring Boot 和 Quartz 构建的轻量级任务调度�
    mvn spring-boot:run
    ```
 
-4. 访问控制台：http://localhost:8080
+4. 访问控制台：http://localhost:8080/task
 
 ### 使用说明
 1. 创建任务：继承 `BaseJob` 类实现自定义任务
