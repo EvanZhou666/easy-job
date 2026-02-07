@@ -39,6 +39,45 @@ import site.qianlima.easyjob.utils.ThreadRegistry;
 @Slf4j
 @Service
 public class JobServiceImpl implements JobService {
+    @Override
+    public List<JobEntity> pageJobs(Integer page, Integer pageSize, String jobName, String jobGroup) {
+        StringBuilder sb = new StringBuilder("SELECT j FROM JobEntity j WHERE 1=1");
+        if (jobName != null && !jobName.isEmpty()) {
+            sb.append(" AND j.jobName LIKE :jobName");
+        }
+        if (jobGroup != null && !jobGroup.isEmpty()) {
+            sb.append(" AND j.jobGroup LIKE :jobGroup");
+        }
+        var query = entityManager.createQuery(sb.toString(), JobEntity.class);
+        if (jobName != null && !jobName.isEmpty()) {
+            query.setParameter("jobName", "%" + jobName + "%");
+        }
+        if (jobGroup != null && !jobGroup.isEmpty()) {
+            query.setParameter("jobGroup", "%" + jobGroup + "%");
+        }
+        query.setFirstResult((page - 1) * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+    }
+
+    @Override
+    public long countJobs(String jobName, String jobGroup) {
+        StringBuilder sb = new StringBuilder("SELECT COUNT(j) FROM JobEntity j WHERE 1=1");
+        if (jobName != null && !jobName.isEmpty()) {
+            sb.append(" AND j.jobName LIKE :jobName");
+        }
+        if (jobGroup != null && !jobGroup.isEmpty()) {
+            sb.append(" AND j.jobGroup LIKE :jobGroup");
+        }
+        var query = entityManager.createQuery(sb.toString(), Long.class);
+        if (jobName != null && !jobName.isEmpty()) {
+            query.setParameter("jobName", "%" + jobName + "%");
+        }
+        if (jobGroup != null && !jobGroup.isEmpty()) {
+            query.setParameter("jobGroup", "%" + jobGroup + "%");
+        }
+        return query.getSingleResult();
+    }
 
     @Autowired
     private Scheduler scheduler;

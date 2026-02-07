@@ -33,6 +33,15 @@ import java.util.List;
  * Service interface for job management
  */
 public interface JobService {
+        /**
+         * 分页查询任务，支持按名称和分组模糊搜索
+         */
+        List<JobEntity> pageJobs(Integer page, Integer pageSize, String jobName, String jobGroup);
+
+        /**
+         * 统计任务总数，支持按名称和分组模糊搜索
+         */
+        long countJobs(String jobName, String jobGroup);
     
     /**
      * Add a new job

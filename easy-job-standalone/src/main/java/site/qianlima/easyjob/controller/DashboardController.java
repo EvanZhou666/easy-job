@@ -57,15 +57,23 @@ public class DashboardController {
 
 
     @GetMapping({"/", "/dashboard"})
-    public String dashboard( @RequestParam(defaultValue = "1") Integer page,
-                             @RequestParam(defaultValue = "20") int pageSize,
-                             Model model) {
-        List<JobEntity> jobs = jobService.pageJobs(page, pageSize);
-        model.addAttribute("jobs", jobs);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", pageSize);
-        return "dashboard";
-    }
+        public String dashboard(@RequestParam(defaultValue = "1") Integer page,
+                                @RequestParam(defaultValue = "20") int pageSize,
+                                @RequestParam(required = false) String jobName,
+                                @RequestParam(required = false) String jobGroup,
+                                Model model) {
+            // 支持搜索和分页
+            List<JobEntity> jobs = jobService.pageJobs(page, pageSize, jobName, jobGroup);
+            long total = jobService.countJobs(jobName, jobGroup);
+            int totalPages = (int) Math.ceil((double) total / pageSize);
+            model.addAttribute("jobs", jobs);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("pageSize", pageSize);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("jobName", jobName);
+            model.addAttribute("jobGroup", jobGroup);
+            return "dashboard";
+        }
 
     @GetMapping("/jobs/{jobId}/logs")
     public String jobLogs(@PathVariable Long jobId, @RequestParam(defaultValue = "1") Integer page,

@@ -25,6 +25,18 @@
                         </button>
                     </div>
                     <div class="card-body">
+                        <!-- 搜索表单 -->
+                        <form class="row g-3 mb-3" method="get" th:action="@{/dashboard}">
+                            <div class="col-auto">
+                                <input type="text" class="form-control" name="jobName" placeholder="任务名称" th:value="${jobName}">
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" class="form-control" name="jobGroup" placeholder="任务分组" th:value="${jobGroup}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-outline-primary">搜索</button>
+                            </div>
+                        </form>
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -58,7 +70,7 @@
                                                     th:onclick="'resumeJob(' + ${job.id} + ')'">恢复</button>
                                             <button type="button" class="btn btn-sm btn-info"
                                                     th:onclick="'showLogs(' + ${job.id} + ')'">日志</button>
-                                                <button type="button" class="btn btn-sm btn-dark"
+                                            <button type="button" class="btn btn-sm btn-dark"
                                                     th:onclick="'interruptJob(' + ${job.id} + ')'">中断</button>
                                             <button type="button" class="btn btn-sm btn-danger"
                                                     th:onclick="'deleteJob(' + ${job.id} + ')'">删除</button>
@@ -72,22 +84,36 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- 分页 -->
+                        <nav aria-label="Page navigation" class="mt-3">
+                            <div class="d-flex justify-content-end align-items-center">
+                                <ul class="pagination mb-0 me-2">
+                                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                                        <a class="page-link"
+                                           th:href="@{/dashboard(page=${currentPage - 1},pageSize=${pageSize},jobName=${jobName},jobGroup=${jobGroup})}" tabindex="-1">上一页</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <span class="page-link" th:text="${currentPage } + '/' + ${totalPages}"></span>
+                                    </li>
+                                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                                        <a class="page-link"
+                                           th:href="@{/dashboard(page=${currentPage + 1},pageSize=${pageSize},jobName=${jobName},jobGroup=${jobGroup})}">下一页</a>
+                                    </li>
+                                </ul>
+                                <form method="get" th:action="@{/dashboard}" class="ms-2">
+                                    <input type="hidden" name="jobName" th:value="${jobName}" />
+                                    <input type="hidden" name="jobGroup" th:value="${jobGroup}" />
+                                    <input type="hidden" name="page" th:value="${currentPage}" />
+                                    <select class="form-select d-inline w-auto" name="pageSize" onchange="this.form.submit()">
+                                        <option th:value="20" th:selected="${pageSize == 20}">20</option>
+                                        <option th:value="50" th:selected="${pageSize == 50}">50</option>
+                                        <option th:value="100" th:selected="${pageSize == 100}">100</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </nav>
                     </div>
                 </div>
-
-                <nav aria-label="Page navigation" class="mt-3">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
-                            <a class="page-link" th:href="@{/dashboard(page=${currentPage - 1},pageSize=${pageSize})}" tabindex="-1">上一页</a>
-                        </li>
-                        <li class="page-item">
-                            <span class="page-link" th:text="${currentPage }"></span>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/dashboard(page=${currentPage + 1},pageSize=${pageSize})}">下一页</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
