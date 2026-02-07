@@ -30,3 +30,4 @@ target
 logs.db
 src/main/resources/application-prod.yaml
 /easy-job-standalone/site/
+/easy-job-standalone/site.zip
